@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-function validate(s) {
+function isValid(s) {
   if (!s.length) {
     return false
   }
@@ -13,12 +13,9 @@ function validate(s) {
 
 export default function App() {
   const [inputValue, setInputValue] = useState("");
-  const [isValid, setIsValid] = useState(true);
 
   function handleInputValueChange(ev) {
-    const {value} = ev.target;
-    setIsValid(validate(value));
-    setInputValue(value)
+    setInputValue(ev.target.value)
   }
 
   return (
@@ -27,7 +24,7 @@ export default function App() {
         onChange={handleInputValueChange}
         value={inputValue}
       />
-      {isValid ? "" : "invalid"}
+      {isValid(inputValue) ? "" : "invalid"}
     </div>
   )
 }
