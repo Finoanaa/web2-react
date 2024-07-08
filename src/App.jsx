@@ -1,75 +1,34 @@
-import {useState} from "react";
-
-// task: string
-//
-// task: {
-//  id: number;
-//  title: string;
-// }
-
-let id = 1;
+import { useEffect, useState } from "react";
 
 export default function App() {
-  const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState("");
+  // useState
+  // useEffect
+  // lifecyle:
+  // mounted (rendu ao anatinle DOM)
+  // updated (averina atao rendu ao antinle DOM)
+  // unmounted (alana ao anatinle)
+  const [count, setCount] = useState(0);
+  const [countBy2, setCountBy2] = useState(0);
 
-  function handleNewTaskChange(ev) {
-    setNewTask(ev.target.value);
-  }
+  useEffect(() => {
+    console.log('count updated', count);
+  }, [count]);
 
-  function handleAddTask() {
-    const toAdd = {
-      id: id,
-      title: newTask,
-    }
-    setTasks([...tasks, toAdd])
-    setNewTask("");
-    id++;
-  }
+  useEffect(() => {
+    console.log('counBy2 updated', countBy2);
+  }, [countBy2]);
 
-  function handleDeleteTask(id) {
-    const filtered = tasks.filter(task => task.id !== id);
-    setTasks(filtered);
-  }
+  useEffect(() => {
+    console.log('count... updated');
+  }, [count, countBy2]);
 
-  function handleUpdateTask(id, newTitle) {
-    // clone 'tasks' into newTasks
-    const newTasks = [...tasks];
-    const index = newTasks.findIndex(task => task.id === id);
-    newTasks[index].title = newTitle;
-    setTasks(newTasks);
-  }
+  // [] => component is mounted
+  // [deps,] => when one of the deps is updated
 
   return (
     <div>
-      <ul>
-        {tasks.map(task => (
-          <li>
-            <input
-              value={task.title}
-              onChange={(ev) => {
-                handleUpdateTask(task.id, ev.target.value)
-              }}
-            />
-            <button
-              onClick={() => handleDeleteTask(task.id)}
-            >
-              delete
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <div>
-        <input
-          onChange={handleNewTaskChange}
-          value={newTask}
-        />
-        <button onClick={handleAddTask}>add</button>
-      </div>
+      <button onClick={() => setCount(count + 1)}>{count}</button>
+      <button onClick={() => setCountBy2(count + 2)}>{countBy2}</button>
     </div>
   )
 }
-
-
-
