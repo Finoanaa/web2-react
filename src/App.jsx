@@ -1,79 +1,75 @@
-import { useState } from 'react';
-import './App.css'
+import {useState} from "react";
 
-// custom hook
-function useToggleColor() {
-  const [color, setColor] = useState("red");
-  function toggleColor() {
-    if (color === "red") {
-      setColor("blue");
-    } else {
-      setColor("red");
+// task: string
+//
+// task: {
+//  id: number;
+//  title: string;
+// }
+
+let id = 1;
+
+export default function App() {
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+
+  function handleNewTaskChange(ev) {
+    setNewTask(ev.target.value);
+  }
+
+  function handleAddTask() {
+    const toAdd = {
+      id: id,
+      title: newTask,
     }
-  }
-  // { color: "red", toggleColor: () => {...} }
-  // { color: "blue", toggleColor: () => {...} }
-  return {color, toggleColor}
-}
-
-function useAlert() {
-  return function() {
-    alert("alert!!!")
-  }
-}
-
-function useCounter(defaultCount) {
-  const [count, setCount] = useState(defaultCount);
-
-  function increment() {
-    setCount(count + 1);
+    setTasks([...tasks, toAdd])
+    setNewTask("");
+    id++;
   }
 
-  function decrement() {
-    setCount(count - 1);
+  function handleDeleteTask(id) {
+    const filtered = tasks.filter(task => task.id !== id);
+    setTasks(filtered);
   }
 
-  return {
-    count,
-    increment,
-    decrement,
+  function handleUpdateTask(id, newTitle) {
+    // clone 'tasks' into newTasks
+    const newTasks = [...tasks];
+    const index = newTasks.findIndex(task => task.id === id);
+    newTasks[index].title = newTitle;
+    setTasks(newTasks);
   }
-}
 
-function ColorText() {
-  const {color, toggleColor} = useToggleColor();
   return (
-    <button onClick={toggleColor}>{color}</button>
-  )
-}
+    <div>
+      <ul>
+        {tasks.map(task => (
+          <li>
+            <input
+              value={task.title}
+              onChange={(ev) => {
+                handleUpdateTask(task.id, ev.target.value)
+              }}
+            />
+            <button
+              onClick={() => handleDeleteTask(task.id)}
+            >
+              delete
+            </button>
+          </li>
+        ))}
+      </ul>
 
-function ToggleColor() {
-  const {color, toggleColor} = useToggleColor();
-  return (
-    <div
-      className={`${color} container`}
-      onClick={toggleColor}
-    >
+      <div>
+        <input
+          onChange={handleNewTaskChange}
+          value={newTask}
+        />
+        <button onClick={handleAddTask}>add</button>
+      </div>
     </div>
   )
 }
 
-export default function App() {
-  const triggerAlert = useAlert();
 
-  const {count, increment, decrement} = useCounter(0);
-
-  return (
-    <>
-      <ColorText />
-      <ToggleColor />
-      <button onClick={triggerAlert}>trigger alert</button>
-
-
-      <h1>{count}</h1>
-      <button onClick={increment}>increment</button>
-      <button onClick={decrement}>decrement</button>
-    </>
-  )
-}
 
