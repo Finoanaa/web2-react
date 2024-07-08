@@ -1,34 +1,28 @@
 import { useEffect, useState } from "react";
 
 export default function App() {
-  // useState
-  // useEffect
-  // lifecyle:
-  // mounted (rendu ao anatinle DOM)
-  // updated (averina atao rendu ao antinle DOM)
-  // unmounted (alana ao anatinle)
-  const [count, setCount] = useState(0);
-  const [countBy2, setCountBy2] = useState(0);
+  const [inputValue, setInputValue] = useState("");
+  const [isValid, setIsValid] = useState(true);
 
   useEffect(() => {
-    console.log('count updated', count);
-  }, [count]);
-
-  useEffect(() => {
-    console.log('counBy2 updated', countBy2);
-  }, [countBy2]);
-
-  useEffect(() => {
-    console.log('count... updated');
-  }, [count, countBy2]);
-
-  // [] => component is mounted
-  // [deps,] => when one of the deps is updated
+    if (!inputValue.length) {
+      setIsValid(false);
+    }
+    else if (/[0-9]/.test(inputValue)) {
+      setIsValid(false);
+    }
+    else {
+      setIsValid(true);
+    }
+  }, [inputValue])
 
   return (
     <div>
-      <button onClick={() => setCount(count + 1)}>{count}</button>
-      <button onClick={() => setCountBy2(count + 2)}>{countBy2}</button>
+      <input
+        onChange={ev => setInputValue(ev.target.value)}
+        value={inputValue}
+      />
+      {isValid ? "" : "invalid"}
     </div>
   )
 }
