@@ -1,36 +1,30 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
+import {useFetch} from "./useFetch";
+
 
 export default function App() {
-  const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const doFetch = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch("https://jsonplaceholder.typicode.com/users", { method: "GET"});
-        const json = await response.json();
-        setUsers(json);
-        setIsLoading(false);
-      } catch (e) {
-        console.log('error');
-      }
-    }
-
-    doFetch();
-  }, []);
+  const [resource, setResource] = useState("users");
+  const [data, {isLoading}] = useFetch(resource);
 
   return (
-    <>
-      {isLoading ? 'getting data...' : null}
+    <div>
+      <div>
+        <select onChange={ev => setResource(ev.target.value)}>
+          <option value="users">users</option>
+          <option value="posts">posts</option>
+        </select>
 
-      <ul>
-        {users.map(user => (
-          <li key={user.id}>
-            {user.username}
-          </li>
-        ))}
-      </ul>
-    </>
+        <h1>{resource}</h1>
+        <ul>
+          {isLoading ? "loading..." : ""}
+
+          {data.map(entry => (
+            <li>
+              {entry.name || entry.title}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   )
 }

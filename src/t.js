@@ -1,6 +1,8 @@
+const apiUrl = "https://jsonplaceholder.typicode.com";
 
-const button = document.getElementById("alert-button")
 
-button.onclick = function() {
-  alert("ohatra!")
-}
+// async/await
+
+
+
+getUsers();
