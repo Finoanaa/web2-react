@@ -1,72 +1,82 @@
-import {createBrowserRouter, RouterProvider, Link} from "react-router-dom";
-import Ohatra from "./Ohatra";
+import {Navigate, createBrowserRouter, RouterProvider, Link, Outlet} from "react-router-dom";
 
-const Menu = () => {
+const NotFound = () => {
   return (
-    <ul>
-      <li>
-        <Link to="/">home</Link>
-      </li>
-
-      <li>
-        <Link to="/ohatra">ohatra</Link>
-      </li>
-
-      <li>
-        <Link to="/eto-ambony-eto">eto ambony eto</Link>
-      </li>
-
-      <li>
-        <Link to="klsdjfklsdjfk">tsy aiko</Link>
-      </li>
-
-    </ul>
+    <h1>very</h1>
   )
 }
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <div>
-        Home
 
-        <Menu />
-      </div>
-    )
-  },
-  {
-    path: "/ohatra",
-    element: (
-      <div>
-        Ohatra
-        <Menu />
-      </div>
-    )
-  },
-  {
-    path: "/eto-ambony-eto",
-    element: (
-      <div>
-        Eto ambony eto
-        <Menu />
-      </div>
+const Layout = () => {
+  return (
+    <div>
+      <ul>
+        <li>
+          <Link to="home">Home</Link>
+        </li>
+        <li>
+          <Link to="ohatra">Ohatra</Link>
+        </li>
+      </ul>
 
-    )
+      <div>
+        <Outlet />
+      </div>
+    </div>
+  )
+}
+
+const Home = () => {
+  return (
+    <div>
+      <h1>Home</h1>
+    </div>
+  )
+}
+
+const Ohatra = () => {
+  return (
+    <div>
+      <h1>Ohatra</h1>
+      <Link to="/">back home</Link>
+    </div>
+  )
+}
+
+const ROUTER = createBrowserRouter([
+  {
+    path: "/app",
+    element: <Layout />,
+    children: [
+      {
+        // route rehefa "/app" fotsiny
+        index: true,
+        element: <Navigate to="home" />,
+      },
+      {
+        // "/app/home"
+        path: "home",
+        element: <Home />
+      },
+      {
+        // "/app/ohatra"
+        path: "ohatra",
+        element: <Ohatra />
+      },
+      {
+        path: "*",
+        element: <h1>tsy misy</h1>
+      }
+    ]
   },
   {
     path: "*",
-    element: (
-      <div>
-        <h1>tsy hita</h1>
-        <Link to="/">go back home</Link>
-      </div>
-    )
+    element: <NotFound />,
   }
-])
+]);
 
 
 export default function App() {
   return (
-      <RouterProvider router={router} />
-  );
+    <RouterProvider router={ROUTER} />
+  )
 }
